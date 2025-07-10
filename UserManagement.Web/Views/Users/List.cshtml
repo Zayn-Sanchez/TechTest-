@@ -19,7 +19,7 @@
                 <th>Forename</th>
                 <th>Surname</th>
                 <th>Email</th>
-                <th>Date of Birth</th>            
+                <th>Date of Birth</th>
                 <th>Account Active</th>
                 <th style="width: 1px;"></th>
             </tr>
@@ -28,33 +28,31 @@
             @foreach (var item in Model.Items)
             {
                 <tr>
-                    <td>
-                        @item.Id
-                    </td>
-                    <td>
-                        @item.Forename
-                    </td>
-                    <td>
-                        @item.Surname
-                    </td>
-                    <td>
-                        @item.Email
-                    </td>
-                    <td>
-                        @item.DateOfBirth?.ToString("yyyy-MM-dd")
-                    </td>
-                    <td>
-                        @(item.IsActive ? "Yes" : "No")
-                    </td>
+                    <td>@item.Id</td>
+                    <td>@item.Forename</td>
+                    <td>@item.Surname</td>
+                    <td>@item.Email</td>
+                    <td>@item.DateOfBirth?.ToString("dd-MM-yyyy")</td>
+                    <td>@(item.IsActive ? "Yes" : "No")</td>
                     <td>
                         <div class="dropdown">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="btnToggleActions">
+                            <button type="button" class="btn btn-default dropdown-toggle"
+                                    data-bs-toggle="dropdown" aria-expanded="false" id="btnToggleActions">
                                 Actions
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="btnToggleActions">
-                                <li><a class="dropdown-item" href="#">View</a></li>
-                                <li><a class="dropdown-item" href="#">Edit</a></li>
-                                <li><a class="dropdown-item" href="#">Delete</a></li>
+                                <li>
+                                    <a class="dropdown-item"
+                                       asp-controller="Users" asp-action="Details" asp-route-id="@item.Id">View</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item"
+                                       asp-controller="Users" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item"
+                                       asp-controller="Users" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                </li>
                             </ul>
                         </div>
                     </td>
@@ -74,7 +72,5 @@
            class="@Btn(UserFilter.NonActive)">Non Active</a>
     </div>
 
-    <a href="#" class="btn btn-primary float-end">
-        Add User
-    </a>
+    <a asp-controller="Users" asp-action="Add" class="btn btn-primary float-end">Add User</a>
 </div>
