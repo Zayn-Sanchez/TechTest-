@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using UserManagement.Services;                      
 using UserManagement.Services.Domain.Interfaces;
 using UserManagement.Web.Models.Users;
 
@@ -11,9 +12,16 @@ public class UsersController : Controller
     public UsersController(IUserService userService) => _userService = userService;
 
     [HttpGet]
-    public ViewResult List()
+    public ViewResult List([FromQuery] UserFilter filter = UserFilter.All)
     {
-        var items = _userService.GetAll().Select(p => new UserListItemViewModel
+        var source = filter switch
+        {
+            UserFilter.ActiveOnly => _userService.FilterByActive(true),
+            UserFilter.NonActive => _userService.FilterByActive(false),
+            _ => _userService.GetAll()
+        };
+
+        var items = source.Select(p => new UserListItemViewModel
         {
             Id = p.Id,
             Forename = p.Forename,
@@ -22,11 +30,7 @@ public class UsersController : Controller
             IsActive = p.IsActive
         });
 
-        var model = new UserListViewModel
-        {
-            Items = items.ToList()
-        };
-
+        var model = new UserListViewModel { Items = items.ToList() };
         return View(model);
     }
 }
