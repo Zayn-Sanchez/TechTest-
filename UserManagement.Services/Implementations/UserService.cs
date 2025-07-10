@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UserManagement.Data;
 using UserManagement.Models;
 using UserManagement.Services.Domain.Interfaces;
@@ -18,7 +18,10 @@ public class UserService : IUserService
     /// <returns></returns>
     public IEnumerable<User> FilterByActive(bool isActive)
     {
-        throw new NotImplementedException();
+        // filters the generic list returned by the data access layer
+        return _dataAccess.GetAll<User>()
+                          .Where(u => u.IsActive == isActive)
+                          .ToList();
     }
 
     public IEnumerable<User> GetAll() => _dataAccess.GetAll<User>();
