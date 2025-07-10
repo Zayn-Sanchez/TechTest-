@@ -1,8 +1,8 @@
 ﻿using System.Linq;
-using UserManagement.Services;                      
+using UserManagement.Services;
 using UserManagement.Services.Domain.Interfaces;
+using UserManagement.Models;
 using UserManagement.Web.Models.Users;
-
 namespace UserManagement.WebMS.Controllers;
 
 [Route("users")]
@@ -33,5 +33,51 @@ public class UsersController : Controller
 
         var model = new UserListViewModel { Items = items.ToList() };
         return View(model);
+    }
+
+    [HttpGet("{id:long}")]
+    public IActionResult Details(long id)
+    {
+        var user = _userService.Get(id);
+        return user is null ? NotFound() : View(user);
+    }
+
+    [HttpGet("add")]
+    public IActionResult Add() => View();
+
+    [HttpPost("add")]
+    public IActionResult Add(User user)
+    {
+        if (!ModelState.IsValid) return View(user);
+        _userService.Add(user);
+        return RedirectToAction(nameof(List));
+    }
+
+    [HttpGet("edit/{id:long}")]
+    public IActionResult Edit(long id)
+    {
+        var user = _userService.Get(id);
+        return user is null ? NotFound() : View(user);
+    }
+
+    [HttpPost("edit/{id:long}")]
+    public IActionResult Edit(long id, User user)
+    {
+        if (!ModelState.IsValid) return View(user);
+        _userService.Update(user);
+        return RedirectToAction(nameof(List));
+    }
+    [HttpGet("delete/{id:long}")]
+    public IActionResult Delete(long id)
+    {
+        var user = _userService.Get(id);
+        return user is null ? NotFound() : View(user);
+    }
+
+    [HttpPost("delete/{id:long}")]
+    public IActionResult DeleteConfirmed(long id)
+    {
+        _userService.Delete(id);
+        return RedirectToAction(nameof(List));
     }
 }

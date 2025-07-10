@@ -1,0 +1,12 @@
+﻿@model UserManagement.Models.User
+<h3>Delete User</h3>
+
+<p class="text-danger">
+    Are you sure you want to delete @Model.Forename @Model.Surname?
+</p>
+
+<form asp-action="DeleteConfirmed" asp-route-id="@Model.Id" method="post">
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="List" class="btn btn-secondary">Cancel</a>
+</form>
