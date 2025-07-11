@@ -1,0 +1,32 @@
+﻿@model IEnumerable<UserManagement.Models.Log>
+
+<h3 class="mb-3">Application Logs</h3>
+
+<table class="table table-striped table-sm">
+    <thead>
+        <tr>
+            <th style="width:140px;">Date&nbsp;(UTC)</th>
+            <th style="width:70px;">User&nbsp;Id</th>
+            <th style="width:110px;">Action</th>
+            <th>Details</th>
+            <th style="width:1px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var log in Model)
+        {
+            <tr>
+                <td>@log.WhenUtc.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@log.UserId</td>
+                <td>@log.Action</td>
+                <td>@log.Details</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@log.Id"
+                       class="btn btn-link btn-sm p-0">view</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Back</a>

@@ -14,14 +14,16 @@ public class UserService : IUserService
     public IEnumerable<User> GetAll() => _db.GetAll<User>().ToList();
 
     public IEnumerable<User> FilterByActive(bool isActive) =>
-        _db.GetAll<User>()
-           .Where(u => u.IsActive == isActive)
-           .ToList();
+        _db.GetAll<User>().Where(u => u.IsActive == isActive).ToList();
 
     public User? Get(long id) =>
         _db.GetAll<User>().SingleOrDefault(u => u.Id == id);
 
-    public void Add(User user) => _db.Create(user);
+    public void Add(User user)
+    {
+        _db.Create(user);
+        _db.AddLog(user.Id, "Created");
+    }
 
     public void Update(User user)
     {
@@ -34,12 +36,15 @@ public class UserService : IUserService
         tracked.IsActive = user.IsActive;
 
         _db.Update(tracked);
+        _db.AddLog(tracked.Id, "Updated");
     }
 
     public void Delete(long id)
     {
         var user = Get(id);
-        if (user is not null)
-            _db.Delete(user);
+        if (user is null) return;
+
+        _db.Delete(user);
+        _db.AddLog(id, "Deleted");
     }
 }
