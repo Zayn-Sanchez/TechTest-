@@ -1,0 +1,12 @@
+﻿@model UserManagement.Models.Log
+
+<h3>Log&nbsp;#@Model.Id</h3>
+
+<table class="table table-bordered w-auto">
+    <tr><th style="width:140px;">Date&nbsp;(UTC)</th><td>@Model.WhenUtc.ToString("yyyy-MM-dd HH:mm")</td></tr>
+    <tr><th>User&nbsp;Id</th><td>@Model.UserId</td></tr>
+    <tr><th>Action</th><td>@Model.Action</td></tr>
+    <tr><th>Details</th><td>@Model.Details</td></tr>
+</table>
+
+<a asp-action="Index" class="btn btn-secondary">Back</a>

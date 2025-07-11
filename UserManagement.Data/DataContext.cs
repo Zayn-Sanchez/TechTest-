@@ -12,29 +12,35 @@ public class DataContext : DbContext, IDataContext
         => options.UseInMemoryDatabase("UserManagement.Data.DataContext");
 
     protected override void OnModelCreating(ModelBuilder model)
-        => model.Entity<User>().HasData(new[]
+    {
+        model.Entity<User>().HasData(new[]
         {
-            new User { Id = 1, Forename = "Peter", Surname = "Loew", Email = "ploew@example.com", IsActive = true },
-            new User { Id = 2, Forename = "Benjamin Franklin", Surname = "Gates", Email = "bfgates@example.com", IsActive = true },
-            new User { Id = 3, Forename = "Castor", Surname = "Troy", Email = "ctroy@example.com", IsActive = false },
-            new User { Id = 4, Forename = "Memphis", Surname = "Raines", Email = "mraines@example.com", IsActive = true },
-            new User { Id = 5, Forename = "Stanley", Surname = "Goodspeed", Email = "sgodspeed@example.com", IsActive = true },
-            new User { Id = 6, Forename = "H.I.", Surname = "McDunnough", Email = "himcdunnough@example.com", IsActive = true },
-            new User { Id = 7, Forename = "Cameron", Surname = "Poe", Email = "cpoe@example.com", IsActive = false },
-            new User { Id = 8, Forename = "Edward", Surname = "Malus", Email = "emalus@example.com", IsActive = false },
-            new User { Id = 9, Forename = "Damon", Surname = "Macready", Email = "dmacready@example.com", IsActive = false },
-            new User { Id = 10, Forename = "Johnny", Surname = "Blaze", Email = "jblaze@example.com", IsActive = true },
-            new User { Id = 11, Forename = "Robin", Surname = "Feld", Email = "rfeld@example.com", IsActive = true },
+            new User { Id = 1,  Forename = "Peter",  Surname = "Loew",        Email = "ploew@example.com",   IsActive = true  },
+            new User { Id = 2,  Forename = "Benjamin Franklin", Surname = "Gates", Email = "bfgates@example.com",  IsActive = true  },
+            new User { Id = 3,  Forename = "Castor", Surname = "Troy",        Email = "ctroy@example.com",   IsActive = false },
+            new User { Id = 4,  Forename = "Memphis", Surname = "Raines",     Email = "mraines@example.com", IsActive = true  },
+            new User { Id = 5,  Forename = "Stanley", Surname = "Goodspeed",  Email = "sgodspeed@example.com", IsActive = true },
+            new User { Id = 6,  Forename = "H.I.",   Surname = "McDunnough",  Email = "himcdunnough@example.com", IsActive = true },
+            new User { Id = 7,  Forename = "Cameron", Surname = "Poe",        Email = "cpoe@example.com",    IsActive = false },
+            new User { Id = 8,  Forename = "Edward",  Surname = "Malus",      Email = "emalus@example.com",  IsActive = false },
+            new User { Id = 9,  Forename = "Damon",   Surname = "Macready",   Email = "dmacready@example.com", IsActive = false },
+            new User { Id = 10, Forename = "Johnny",  Surname = "Blaze",      Email = "jblaze@example.com",  IsActive = true  },
+            new User { Id = 11, Forename = "Robin",   Surname = "Feld",       Email = "rfeld@example.com",   IsActive = true  },
         });
 
+        model.Entity<Log>().HasIndex(l => l.UserId);
+    }
+
     public DbSet<User>? Users { get; set; }
+    public DbSet<Log>? Logs { get; set; }
+    IQueryable<Log> IDataContext.Logs => Logs!;
 
     public IQueryable<TEntity> GetAll<TEntity>() where TEntity : class
-        => base.Set<TEntity>();
+        => Set<TEntity>();
 
     public void Create<TEntity>(TEntity entity) where TEntity : class
     {
-        base.Add(entity);
+        Add(entity);
         SaveChanges();
     }
 
@@ -46,7 +52,18 @@ public class DataContext : DbContext, IDataContext
 
     public void Delete<TEntity>(TEntity entity) where TEntity : class
     {
-        base.Remove(entity);
+        Remove(entity);
+        SaveChanges();
+    }
+
+    public void AddLog(long userId, string action, string? details = null)
+    {
+        Logs!.Add(new Log
+        {
+            UserId = userId,
+            Action = action,
+            Details = details
+        });
         SaveChanges();
     }
 }
